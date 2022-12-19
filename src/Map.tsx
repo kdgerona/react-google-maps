@@ -1,5 +1,10 @@
-import React, { Fragment, memo } from 'react';
-import { GoogleMap, Marker, MarkerClusterer } from '@react-google-maps/api';
+import React, { Fragment, memo, useRef, useState } from 'react';
+import {
+  GoogleMap,
+  Marker,
+  MarkerClusterer,
+  Polyline,
+} from '@react-google-maps/api';
 import { Clusterer } from '@react-google-maps/marker-clusterer';
 
 const locations = [
@@ -28,7 +33,25 @@ const locations = [
   { lat: -43.999792, lng: 170.463352 },
 ];
 
+const path = [
+  { lat: 37.772, lng: -122.214 },
+  { lat: 21.291, lng: -157.821 },
+  { lat: -18.142, lng: 178.431 },
+  { lat: -27.467, lng: 153.027 },
+];
+
 const Map: React.FC = () => {
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const headerRef = useRef(null);
+
+  const onLoad = (map: google.maps.Map) => {
+    setMap(map);
+
+    if (!headerRef.current) return;
+
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(headerRef.current);
+  };
+
   return (
     <>
       {/** @ts-ignore */}
@@ -38,7 +61,12 @@ const Map: React.FC = () => {
           height: '100%',
           width: '100%',
         }}
-        onLoad={() => console.log('IM LOADED')}
+        options={{
+          mapTypeControlOptions: {
+            position: google.maps.ControlPosition.TOP_RIGHT,
+          },
+        }}
+        onLoad={onLoad}
         center={{ lat: -31.56391, lng: 147.154312 }}
         zoom={5}
       >
@@ -51,6 +79,10 @@ const Map: React.FC = () => {
             )) as any
           }
         /> */}
+        <div ref={headerRef} style={{
+          padding: '20px',      
+          fontSize: '40px',
+        }}>Maps Sample</div>
 
         {/** @ts-ignore */}
         <MarkerClusterer>
@@ -63,8 +95,16 @@ const Map: React.FC = () => {
             )) as any
           }
         </MarkerClusterer>
-
-        
+        {/** @ts-ignore */}
+        <Polyline
+          path={path}
+          options={{
+            strokeColor: '#FF0000',
+            geodesic: true,
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+          }}
+        />
       </GoogleMap>
     </>
   );

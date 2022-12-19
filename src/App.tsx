@@ -11,19 +11,16 @@ const App = () => {
   });
 
   return (
-    <>
-      <h1>Maps Sample</h1>
-      <div
-        style={{
-          height: '600px',
-          width: '100vw',
-        }}
-      >
-        <div style={{ height: '100%', width: '100%' }}>
-          {isLoaded ? <Maps /> : <h1>Loading Maps...</h1>}
-        </div>
+    <div
+      style={{
+        height: '100vh',
+        width: '100vw',
+      }}
+    >
+      <div style={{ height: '100%', width: '100%' }}>
+        {isLoaded ? <Maps /> : <h1>Loading Maps...</h1>}
       </div>
-    </>
+    </div>
   );
 };
 
